@@ -8,14 +8,8 @@
 <section class="login-section">
   <div class="container">
     <div class="login-form-container">
-      <% if (typeof error !== 'undefined' && error) { %>
-        <div class="alert alert-error">
-          <i class="fas fa-exclamation-circle"></i>
-          <%= error %>
-        </div>
-      <% } %>
-      
-      <form class="login-form" action="/auth/signup" method="POST">
+      <% /* Error/success messages will be handled by JS and shown here */ %>
+      <form class="login-form"><% /* JS will handle submission, no action/method needed */ %>
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" class="form-control" required>
@@ -53,4 +47,7 @@
       </form>
     </div>
   </div>
-</section> 
+</section>
+
+<% /* Include signup-handler.js for AJAX registration (see /public/js/signup-handler.js) */ %>
+<script type="module" src="/js/signup-handler.js"></script> 
