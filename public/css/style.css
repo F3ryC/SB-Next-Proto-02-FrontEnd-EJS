@@ -29,6 +29,13 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex-grow: 1;
 }
 
 h1 {

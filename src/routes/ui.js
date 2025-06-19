@@ -69,5 +69,11 @@ router.get("/dashboard", (req, res) => {
   });
 });
 
+router.get("/user-landing", (req, res) => {
+  res.render("user-landing", {
+    title: "Sproutbeat - Welcome",
+    active: "user-landing" 
+  });
+});
 
 module.exports = router; 
