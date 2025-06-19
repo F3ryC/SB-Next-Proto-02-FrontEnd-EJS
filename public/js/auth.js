@@ -26,14 +26,14 @@ export async function registerUser(userData) {
     });
     return await response.json();
   } catch (err) {
-    return { error: 'Network error. Please try again.' };
+    return { error: err.message || 'Network error. Please try again.' };
   }
 }
 
 /**
- * Log in a user
+ * Log in a user using Firebase Authentication
  * @param {Object} credentials - { username/email, password }
- * @returns {Promise<Object>} API response (should include token)
+ * @returns {Promise<Object>} Firebase user credential
  */
 export async function loginUser(credentials) {
   try {
@@ -48,7 +48,7 @@ export async function loginUser(credentials) {
     }
     return data;
   } catch (err) {
-    return { error: 'Network error. Please try again.' };
+    return { error: err.message || 'Login failed. Please try again.' };
   }
 }
 
