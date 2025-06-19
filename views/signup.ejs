@@ -1,0 +1,56 @@
+<section class="page-header">
+  <div class="container">
+    <h1>Create Account</h1>
+    <p>Join Sproutbeat and start your music teaching journey</p>
+  </div>
+</section>
+
+<section class="login-section">
+  <div class="container">
+    <div class="login-form-container">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <form class="login-form" action="/auth/signup" method="POST">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        
+        <div class="form-options">
+          <div class="remember-me">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Remember me</label>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </div>
+        
+        <div class="form-footer">
+          <p>Already have an account? <a href="/login">Sign in</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section> 

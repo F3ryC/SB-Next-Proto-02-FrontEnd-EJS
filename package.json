@@ -1,0 +1,35 @@
+{
+  "name": "netflix-cms-backend",
+  "version": "1.0.0",
+  "description": "Backend for Netflix-style CMS",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify-env": "node verify-env.js",
+    "verify-firebase": "node verify-firebase.js",
+    "seed": "node src/scripts/seed-content.js",
+    "download-assets": "node src/scripts/download-assets.js",
+    "setup-content": "npm run verify-firebase && npm run download-assets && npm run seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.18.3",
+    "express-ejs-layouts": "^2.5.1",
+    "express-validator": "^7.0.1",
+    "firebase-admin": "^12.0.0",
+    "sequelize": "^6.37.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

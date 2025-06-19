@@ -1,0 +1,30 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="/">
+          <img src="/images/sproutbeat-logo.png" alt="Sproutbeat Logo">
+        </a>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li class="<%= typeof active !== 'undefined' && active === 'home' ? 'active' : '' %>"><a href="/">Home</a></li>
+          <li class="<%= typeof active !== 'undefined' && active === 'plans' ? 'active' : '' %>"><a href="/plans">Plans</a></li>
+          <li class="<%= typeof active !== 'undefined' && active === 'login' ? 'active' : '' %>"><a href="/login">Login</a></li>
+          <!--<li><a href="#">Features</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">About</a></li> -->
+        </ul>
+      </nav>
+      <div class="header-buttons">
+        <a href="/login" class="btn btn-outline">Log In</a>
+        <a href="/signup" class="btn btn-primary">Sign Up</a>
+      </div>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>

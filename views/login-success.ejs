@@ -1,0 +1,29 @@
+<section class="page-header">
+  <div class="container">
+    <h1>Login Successful</h1>
+    <p>You are now logged in to your Sproutbeat account</p>
+  </div>
+</section>
+
+<section class="login-success-section">
+  <div class="container">
+    <div class="success-content">
+      <div class="success-message">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2>Welcome back, <%= user.name %></h2>
+        <p>You have successfully logged in to your account.</p>
+      </div>
+      <div class="user-info">
+        <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Role:</strong> <%= user.role %></p>
+      </div>
+      <div class="action-buttons">
+        <a href="/" class="btn btn-primary">Go to Dashboard</a>
+        <form action="/logout" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-outline">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section> 

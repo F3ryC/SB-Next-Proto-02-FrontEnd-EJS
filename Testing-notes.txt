@@ -1,0 +1,72 @@
+Context:  Brainstorming for future improvement of Sproutbeat.com.  I have been thinking about the next iteration/version of Sproutebeat.com.  I have an exsitting API that I may be able to re-use.  I would like to have a new Mobile App (eventually for iOS, Android, but with single code-base) where I can let users browse, find, and play all of the games from Sprooutbeat.  I would like for that experience to be the same as web.  This is something like "Sproutbeat 2..0" idea 
+
+Task: Help me with a starter app that helps me to get started with the above idea
+
+
+
+
+Step 0: Run the test-auth.js to get the auth token 
+
+Test the Profile Endpoint:
+curl -v -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  http://localhost:3000/api/auth/profile
+
+Test User Registration:
+curl -v -X POST \
+  -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  -H "Content-Type: application/json" \
+  -d '{"displayName":"Test User"}' \
+  http://localhost:3000/api/auth/register
+
+
+Create Content:
+curl -v -X POST \
+  -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Test Content",
+    "description": "Test Description",
+    "category": "movie",
+    "contentType": "video",
+    "tags": ["test", "sample"]
+  }' \
+  http://localhost:3000/api/content
+
+Get All Content:
+curl -v -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  http://localhost:3000/api/content
+
+Get Single Content (replace CONTENT_ID with an actual ID from the previous response):
+curl -v -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  http://localhost:3000/api/content/CONTENT_ID
+
+Update Content:
+curl -v -X PUT \
+  -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Content",
+    "description": "Updated Description"
+  }' \
+  http://localhost:3000/api/content/CONTENT_ID
+
+
+  Delete Content:
+  curl -v -X DELETE \
+  -H "Authorization: Bearer dvf0fnQfeEPVbI28GPF5bQ4XjVn2" \
+  http://localhost:3000/api/content/CONTENT_ID
+
+
+
+Tips:
+Always include the -v flag in curl commands to see detailed request/response information
+
+Use json_pp to format JSON responses
+curl ... | json_pp
+
+Save the token in a variable for easier use:
+TOKEN=$(node test-auth.js | grep "^TOKEN=" | cut -d'=' -f2)
+# Then use it in commands
+curl -H "Authorization: Bearer $TOKEN" ...
+
+
