@@ -32,22 +32,25 @@ window.addEventListener('DOMContentLoaded', () => {
     const formData = new FormData(form);
     const userData = {
       username: formData.get('username'),
+      displayName: formData.get('displayName') || formData.get('username'), // Ensure displayName is sent
       email: formData.get('email'),
       password: formData.get('password'),
-      // Add role or name if needed
     };
 
     // Call registerUser
     const result = await registerUser(userData);
 
     // Handle response
-    if (result.error || result.message === 'Error registering user') {
-      errorDiv.textContent = result.error || result.message || 'Registration failed.';
+    if (result.error || !result.user) {
+      errorDiv.textContent = result.message || result.error || 'Registration failed.';
       errorDiv.style.display = 'block';
     } else {
-      successDiv.textContent = 'Registration successful! Please log in.';
+      // User is now logged in via session cookie
+      successDiv.textContent = 'Registration successful! Redirecting...';
       successDiv.style.display = 'block';
       form.reset();
+      // Redirect to a landing page
+      setTimeout(() => { window.location.href = '/user-landing'; }, 1000);
     }
   });
 }); 
