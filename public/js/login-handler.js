@@ -39,13 +39,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const result = await loginUser(credentials);
 
     // Handle response
-    if (result.error || result.message === 'Invalid credentials' || !result.token) {
-      errorDiv.textContent = result.error || result.message || 'Login failed.';
+    if (result.error || !result.user) {
+      errorDiv.textContent = result.message || result.error || 'Login failed.';
       errorDiv.style.display = 'block';
     } else {
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(result.user));
-
+      // User data is now in the session, no need to store it in localStorage.
+      // The backend has set an HttpOnly cookie for session management.
       successDiv.textContent = 'Login successful! Redirecting...';
       successDiv.style.display = 'block';
       form.reset();

@@ -1,6 +1,6 @@
-// auth.js - Handles authentication-related API calls and token management
+// auth.js - Handles authentication-related API calls.
 // For use in EJS frontend. All business logic is in the backend API.
-// Uses localStorage for token management (can be improved to HttpOnly cookies in the future).
+// The backend uses HttpOnly cookies for session management, so no token handling is needed here.
 
 const API_BASE_URL = 'http://localhost:4000/api';
 
@@ -22,7 +22,8 @@ export async function registerUser(userData) {
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      credentials: 'include'
     });
     return await response.json();
   } catch (err) {
@@ -33,46 +34,61 @@ export async function registerUser(userData) {
 /**
  * Log in a user using Firebase Authentication
  * @param {Object} credentials - { username/email, password }
- * @returns {Promise<Object>} Firebase user credential
+ * @returns {Promise<Object>} API response
  */
 export async function loginUser(credentials) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials)
+      body: JSON.stringify(credentials),
+      credentials: 'include'
     });
-    const data = await response.json();
-    if (response.ok && data.token) {
-      setAuthToken(data.token);
-    }
-    return data;
+    // No token management needed, the browser handles the session cookie automatically.
+    return await response.json();
   } catch (err) {
     return { error: err.message || 'Login failed. Please try again.' };
   }
 }
 
 /**
- * Store JWT or session token in localStorage
- * @param {string} token
+ * Logs out the current user by destroying the server session.
+ * @returns {Promise<Object>} API response
  */
-export function setAuthToken(token) {
-  localStorage.setItem('authToken', token);
+export async function logoutUser() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
+    return await response.json();
+  } catch (err) {
+    return { error: err.message || 'Logout failed. Please try again.' };
+  }
 }
 
 /**
- * Retrieve JWT or session token from localStorage
- * @returns {string|null}
+ * Checks the user's authentication status with the backend.
+ * @returns {Promise<Object>} API response containing user data if authenticated
  */
-export function getAuthToken() {
-  return localStorage.getItem('authToken');
-}
-
-/**
- * Remove JWT or session token from localStorage
- */
-export function removeAuthToken() {
-  localStorage.removeItem('authToken');
+export async function checkAuthStatus() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/status`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
+    // Note: A 401 error is expected after logout or when not authenticated.
+    // This is handled gracefully here, but the browser will still log the failed request in DevTools.
+    if (response.status === 401) {
+      // Not authenticated
+      return { isAuthenticated: false };
+    }
+    return await response.json();
+  } catch (err) {
+    return { isAuthenticated: false, error: err.message || 'Network error.' };
+  }
 }
 
 // Add more functions as needed for password reset, email verification, etc. 
