@@ -42,6 +42,22 @@ router.get("/forgot-password", (req, res) => {
   });
 });
 
+// Email verification page
+router.get("/email-verified", (req, res) => {
+  res.render("email-verified", {
+    title: "Sproutbeat - Email Verified",
+    active: "email-verified"
+  });
+});
+
+// Reset password page (for email links)
+router.get("/reset-password", (req, res) => {
+  res.render("reset-password", {
+    title: "Sproutbeat - Reset Password",
+    active: "reset-password"
+  });
+});
+
 // Protected route - client-side JS handles authentication checks
 router.get("/dashboard", (req, res) => {
   res.render("dashboard", {

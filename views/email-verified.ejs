@@ -1,0 +1,115 @@
+<section class="page-header">
+  <div class="container">
+    <h1>Email Verification</h1>
+    <p>Verifying your email address</p>
+  </div>
+</section>
+
+<section class="login-section">
+  <div class="container">
+    <div class="login-form-container">
+      <!-- Loading state -->
+      <div id="loading-state" class="text-center">
+        <i class="fas fa-spinner fa-spin fa-3x" style="color: #4CAF50; margin-bottom: 20px;"></i>
+        <h3>Verifying your email...</h3>
+        <p>Please wait while we verify your email address.</p>
+      </div>
+
+      <!-- Success state -->
+      <div id="success-state" class="text-center" style="display: none;">
+        <i class="fas fa-check-circle fa-3x" style="color: #4CAF50; margin-bottom: 20px;"></i>
+        <h3>Email Verified Successfully!</h3>
+        <p>Your email address has been verified. You can now access all features of Sproutbeat.</p>
+        <div class="form-actions" style="margin-top: 30px;">
+          <a href="/login" class="btn btn-primary">Sign In</a>
+          <a href="/" class="btn btn-secondary">Go to Home</a>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div id="error-state" class="text-center" style="display: none;">
+        <i class="fas fa-exclamation-circle fa-3x" style="color: #f44336; margin-bottom: 20px;"></i>
+        <h3>Verification Failed</h3>
+        <p id="error-message">There was an error verifying your email address.</p>
+        <div class="form-actions" style="margin-top: 30px;">
+          <button id="resend-verification" class="btn btn-primary">Resend Verification Email</button>
+          <a href="/login" class="btn btn-secondary">Back to Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+  import { verifyEmail, sendVerificationEmail } from '/js/auth.js';
+  import { showSuccess, showError } from '/js/messaging.js';
+
+  function showState(state) {
+    // Hide all states
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('success-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'none';
+    
+    // Show the requested state
+    document.getElementById(`${state}-state`).style.display = 'block';
+  }
+
+  // Handle email verification
+  async function handleEmailVerification() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const oobCode = urlParams.get('oobCode');
+    
+    if (!oobCode) {
+      showState('error');
+      document.getElementById('error-message').textContent = 'No verification code found. Please check your email and click the verification link again.';
+      return;
+    }
+
+    try {
+      const result = await verifyEmail(oobCode);
+      
+      if (result.error) {
+        showState('error');
+        document.getElementById('error-message').textContent = result.error;
+      } else {
+        showState('success');
+        showSuccess(result.message, '.login-form-container');
+      }
+    } catch (error) {
+      showState('error');
+      document.getElementById('error-message').textContent = 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  // Handle resend verification email
+  document.getElementById('resend-verification').addEventListener('click', async () => {
+    const email = prompt('Please enter your email address to resend the verification email:');
+    
+    if (!email) {
+      return;
+    }
+
+    const button = document.getElementById('resend-verification');
+    const originalText = button.textContent;
+    button.textContent = 'Sending...';
+    button.disabled = true;
+
+    try {
+      const result = await sendVerificationEmail(email);
+      
+      if (result.error) {
+        showError(result.error, '.login-form-container');
+      } else {
+        showSuccess('Verification email sent successfully! Please check your inbox.', '.login-form-container');
+      }
+    } catch (error) {
+      showError('Failed to send verification email. Please try again.', '.login-form-container');
+    } finally {
+      button.textContent = originalText;
+      button.disabled = false;
+    }
+  });
+
+  // Start verification process when page loads
+  document.addEventListener('DOMContentLoaded', handleEmailVerification);
+</script> 
