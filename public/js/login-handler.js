@@ -1,55 +1,73 @@
 import { loginUser } from './auth.js';
+import { showLoading, handleApiResponse, MESSAGE_TEMPLATES, clearMessages } from './messaging.js';
 
 // Wait for the DOM to be fully loaded
 window.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('.login-form');
   if (!form) return;
 
-  // Create or select error/success message containers
-  let errorDiv = document.querySelector('.alert-error');
-  let successDiv = document.querySelector('.alert-success');
-
-  // If not present, create them dynamically
-  if (!errorDiv) {
-    errorDiv = document.createElement('div');
-    errorDiv.className = 'alert alert-error';
-    errorDiv.style.display = 'none';
-    form.prepend(errorDiv);
-  }
-  if (!successDiv) {
-    successDiv = document.createElement('div');
-    successDiv.className = 'alert alert-success';
-    successDiv.style.display = 'none';
-    form.prepend(successDiv);
-  }
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    errorDiv.style.display = 'none';
-    successDiv.style.display = 'none';
+    
+    // Clear any existing messages
+    clearMessages('.login-form-container');
+    
+    // Show loading state
+    const loadingMessage = showLoading('.login-form-container');
+    
+    // Disable form during submission
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Signing In...';
 
-    // Collect form data
-    const formData = new FormData(form);
-    const credentials = {
-      username: formData.get('username'), // or email
-      password: formData.get('password'),
-    };
+    try {
+      // Collect form data
+      const formData = new FormData(form);
+      const credentials = {
+        username: formData.get('username'), // or email
+        password: formData.get('password'),
+      };
 
-    // Call loginUser
-    const result = await loginUser(credentials);
+      // Validate required fields
+      if (!credentials.username || !credentials.password) {
+        throw new Error(MESSAGE_TEMPLATES.VALIDATION_ERROR);
+      }
 
-    // Handle response
-    if (result.error || !result.user) {
-      errorDiv.textContent = result.message || result.error || 'Login failed.';
-      errorDiv.style.display = 'block';
-    } else {
-      // User data is now in the session, no need to store it in localStorage.
-      // The backend has set an HttpOnly cookie for session management.
-      successDiv.textContent = 'Login successful! Redirecting...';
-      successDiv.style.display = 'block';
-      form.reset();
-      // Optionally redirect after a short delay
-      setTimeout(() => { window.location.href = '/user-landing'; }, 1000);
+      // Call loginUser
+      const result = await loginUser(credentials);
+
+      // Handle response using standardized messaging
+      const success = handleApiResponse(result, '.login-form-container', {
+        success: MESSAGE_TEMPLATES.LOGIN_SUCCESS,
+        error: result.message || MESSAGE_TEMPLATES.LOGIN_ERROR
+      });
+
+      if (success) {
+        // Reset form on success
+        form.reset();
+        
+        // Redirect to user landing page after a short delay
+        setTimeout(() => {
+          window.location.href = '/user-landing';
+        }, 2000);
+      }
+
+    } catch (error) {
+      // Handle network errors or validation errors
+      const errorMessage = error.message || MESSAGE_TEMPLATES.NETWORK_ERROR;
+      handleApiResponse({ error: errorMessage }, '.login-form-container', {
+        error: errorMessage
+      });
+    } finally {
+      // Re-enable form
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+      
+      // Remove loading message
+      if (loadingMessage) {
+        loadingMessage.remove();
+      }
     }
   });
 }); 
