@@ -4,8 +4,9 @@ const dotenv = require('dotenv');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 
-// Import only UI routes
+// Import routes
 const uiRoutes = require('./routes/ui');
+const appRoutes = require('./routes/app');
 
 // Load environment variables
 dotenv.config();
@@ -27,8 +28,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Only UI routes
-app.use('/', uiRoutes);
+// --- Custom Subdomain Routing Middleware ---
+app.use((req, res, next) => {
+  // The 'hostname' property contains the hostname from the "Host" header.
+  if (req.hostname === 'app.localhost') {
+    // If the hostname matches, use the app router.
+    appRoutes(req, res, next);
+  } else {
+    // Otherwise, use the main UI router for the marketing site.
+    uiRoutes(req, res, next);
+  }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

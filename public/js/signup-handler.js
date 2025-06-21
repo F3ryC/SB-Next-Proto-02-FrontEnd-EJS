@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         // Redirect to user landing page after a short delay
         setTimeout(() => {
-          window.location.href = '/user-landing';
+          window.location.href = 'http://app.localhost:3000/user-landing';
         }, 2000);
       }
 
