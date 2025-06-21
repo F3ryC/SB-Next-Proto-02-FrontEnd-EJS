@@ -147,4 +147,38 @@ Building a Content Management System (CMS) for music education content. The syst
 
 1.  Client-side Firebase authentication is key for the EJS views. Ensure `firebaseConfig` is correctly passed and used.
 2.  Test Mailchimp form submissions from the actual UI, not just API.
-3.  Keep all three major documents (`README.md`, `TEST.MD`, `DEVELOPMENT.MD`) in sync with progress. 
+3.  Keep all three major documents (`README.md`, `TEST.MD`, `DEVELOPMENT.MD`) in sync with progress.
+
+## Local Development with Subdomains (`app.localhost`)
+
+To properly develop and test the separation between the marketing site (`localhost:3000`) and the web application (`app.localhost:3000`), you must configure your local machine to recognize the `app.localhost` domain.
+
+The recommended and most straightforward method is to edit your local `hosts` file. This file is a simple text file that your operating system uses to map hostnames to IP addresses before it queries DNS.
+
+### Editing Your `hosts` File
+
+You will need administrator privileges to edit this file.
+
+1.  **Open the `hosts` file** with a text editor as an administrator:
+    *   **macOS / Linux:** Open a terminal and run:
+        ```sh
+        sudo nano /etc/hosts
+        ```
+    *   **Windows:**
+        *   Open the Start Menu, search for "Notepad".
+        *   Right-click on Notepad and select "Run as administrator".
+        *   In Notepad, go to `File` > `Open` and navigate to `C:\Windows\System32\drivers\etc\hosts`.
+
+2.  **Add the new entry**. Your `hosts` file likely already contains a line for `localhost` (e.g., `127.0.0.1 localhost`). It is critical that you **do not change that line**. Add the following as a **new line** at the bottom of the file:
+    ```
+    127.0.0.1   app.localhost
+    ```
+    This tells your computer that requests to `app.localhost` should also be directed to your local machine (`127.0.0.1`), just like `localhost`. After saving, your file should contain both mappings.
+
+3.  **Save and close** the file.
+    *   In `nano`, press `Ctrl+O`, then `Enter` to save, and `Ctrl+X` to exit.
+    *   In Notepad, simply save the file.
+
+4.  **Verify the change.** After saving, you should be able to access `http://app.localhost:3000` in your browser once the `ui-frontend` server is running.
+
+> **Note on Alternatives:** While other methods like using a local proxy server (e.g., Caddy, Nginx) or tools like `dnsmasq` exist, they add significant complexity to the development setup. For the purposes of this project, editing the `hosts` file is the simplest, most reliable, and recommended approach. 
