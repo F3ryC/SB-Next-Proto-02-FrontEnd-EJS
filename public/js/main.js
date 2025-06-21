@@ -50,8 +50,15 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Check authentication status and update UI
-  handleAuthStatus();
+  // Only check authentication status on pages that need it
+  // Public pages like home, plans, etc. don't need auth checks
+  const currentPath = window.location.pathname;
+  const publicPages = ['/', '/plans', '/login', '/signup', '/forgot-password'];
+  
+  if (!publicPages.includes(currentPath)) {
+    // Only check auth on protected pages
+    handleAuthStatus();
+  }
 })
 
 /**
