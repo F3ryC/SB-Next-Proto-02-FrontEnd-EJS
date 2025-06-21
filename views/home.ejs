@@ -52,6 +52,20 @@
     </div>
   </div>
 </section>
+
+<!-- Dynamic Content Section - Populated by Backend API -->
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Available Content</h2>
+      <p>Explore our library of music education resources</p>
+    </div>
+    <div id="content-container" class="content-grid">
+      <!-- Content will be dynamically loaded from the backend API -->
+    </div>
+  </div>
+</section>
+
 <!--
 <section class="testimonials">
   <div class="container">
@@ -98,3 +112,13 @@
     </div>
   </div>
 </section>
+
+<!-- Load content.js module to fetch and display content from backend API -->
+<script type="module">
+  import { initializeContent } from '/js/content.js';
+  
+  // Initialize content display when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeContent('content-container');
+  });
+</script>
